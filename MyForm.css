@@ -1,0 +1,7 @@
+#myForm input{
+	border: 1px solid;
+}
+
+#myForm input.error{
+	border: 1px solid red;
+}
