@@ -5,19 +5,6 @@ function Form(){
 	const inputErrorClassName = "error";
 	const validator = new Validator();
 
-	function onSubmit(event){
-		const validateResult = self.validate();
-		$("input[name]", self.form).removeClass(inputErrorClassName);
-		if(!validateResult.isValid){
-			prepareInvalidInputs(validateResult.errorFields);
-		}
-		else{
-			$("#" + submitBtnID, self.form).attr("disabled", "disabled");
-			ajaxQuery();
-		}
-		event.preventDefault();
-	}
-
 	function ajaxQuery(){
 		$.ajax({
 			url: self.form.attr("action"),
@@ -103,8 +90,9 @@ function Form(){
 			tagOption: {
 				type: "submit",
 				id: submitBtnID,
-				click: function(event){ 
-					onSubmit(event);
+				click: function(event){
+					event.preventDefault();
+					self.submit();
 				}
 			}
 		}
@@ -170,7 +158,15 @@ function Form(){
 	}
 	
 	self.submit = function(){
-		$("#" + submitBtnID, self.form).click();
+		const validateResult = self.validate();
+		$("input[name]", self.form).removeClass(inputErrorClassName);
+		if(!validateResult.isValid){
+			prepareInvalidInputs(validateResult.errorFields);
+		}
+		else{
+			$("#" + submitBtnID, self.form).attr("disabled", "disabled");
+			ajaxQuery();
+		}
 	}
 
 	createForm(self.inputsOptions);
